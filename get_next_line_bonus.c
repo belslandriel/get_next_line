@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miclandr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 15:23:47 by miclandr          #+#    #+#             */
-/*   Updated: 2024/11/30 02:25:06 by miclandr         ###   ########.fr       */
+/*   Updated: 2024/11/30 16:41:40 by miclandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_line(int fd, char **buffer, char **backup)
 {
@@ -83,18 +83,18 @@ void	free_ptr(char **ptr)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup;
+	static char	*backup[OPEN_MAX];
 	char		*buffer;
 	char		*res;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	if (!backup)
-		backup = ft_strdup("");
-	res = get_line(fd, &buffer, &backup);
+	if (!backup[fd])
+		backup[fd] = ft_strdup("");
+	res = get_line(fd, &buffer, &backup[fd]);
 	free(buffer);
 	return (res);
 }
